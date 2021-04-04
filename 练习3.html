@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function fun() {
+            this.a = 0;
+            this.b = function () {
+                alert(this.a);
+            };
+        };
+        fun.prototype = {
+            //=construtor：fun
+            b: function () {
+                this.a = 20;
+                alert(this.a);
+            },
+            c: function () {
+                this.a = 30;
+                alert(this.a);
+
+            }
+
+        }
+        var my_fun = new fun();
+        my_fun.b();
+        my_fun.c();
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+
+    <script>
+        function c1(name) {
+            if (name) {
+                this.name = name;
+            };
+
+        }
+        function c2(name) {
+            this.name = name;
+        }
+        function c3(name) {
+            this.name = name || "join";
+
+        }
+        c1.prototype.name = "tome";
+        c2.prototype.name = "tom";
+        c3.prototype.name = "tome";
+        alert((new c1().name) + (new c2().name) + (new c3().name));
+
+    </script>
+
+
+
+    <script>
+        function foo() {
+            getName = function () {
+                console.log(1);
+            };
+            return this;
+        }
+        foo.getName = function () {
+            console.log(2);
+        }
+        foo.prototype.getName = function () {
+            console.log(3);
+        }
+        var getName = function () {
+            console.log(4);
+        };
+        function getName() {
+            console.log(5);
+        }
+        foo.getName();
+        getName();
+        foo().getName();
+        getName();
+        new foo.getName();
+        new foo().getName();
+        new new foo().getName();
+
+
+
+
+
+
+
+
+    </script>
+
+    <script>
+        var a = {
+            i: 0,
+            toString() {
+                return ++this.i;
+            }
+        };
+        if (a == 1 && a == 2 && a == 3) {
+            console.log("ok");
+        }
+
+    </script>
+    <script>
+        var a = {
+            i: 0,
+            toString() {
+                return ++this.i;
+            }
+        };
+        if (a == 1 && a == 2 && a == 3) {
+            console.log("ok");
+        }
+    </script>
+
+    <script>
+        var a = {
+            i: 0,
+            toString() {
+                return ++this.i;
+            }
+        };
+        if (a == 1 && a == 2 && a == 3) {
+            console.log("ok")
+
+        }
+
+
+
+    </script>
+
+    <script>
+        var a = [1, 2, 3];
+        a.toString = a.shift;
+        if (a == 1 && a == 2 && a == 3) {
+            console.log("ok");
+        }
+    </script>
+    var i = 0 ;
+    object.defineProperty(window,"a",{
+    get(){
+    //=获取window.a的时候触发
+    return ++i;
+    },
+    set(){
+    //=给window.a设置属性值的时候触发
+    }
+
+
+
+    })；
+    if(a == 1 && a == 2 && a == 3){
+    console.log("ok");
+
+
+
+    <script>
+        Array.prototype.push = function push(num) {
+            //= this:arr
+            //= 拿原有的length作为新增项的索引
+            this[this.length] = num;
+            //= length的长度会自动跟着累加1
+        }
+
+        let obj = {
+            2: 3,
+            3: 4,
+            length: 2,
+            push: Array.prototype.push
+        };
+        obj.push(1);
+        obj.push(2);
+        console.log(obj);
+
+
+
+
+
+
+
+    </script>
+
+
+    <script>
+        function add(...outArgs) {
+            add = function (...innerArgs) {
+                outArgs.push(...innerArgs);
+                return add;
+            };
+            add.toString = function () {
+                return outArgs.reduce((x, y) => x + y);
+
+            };
+            return add;
+
+        }
+        let res = add(1, 2)(3)(4)(5)(6, 7);
+        alert(res);
+    </script>
+
+    <script>
+        function add(...outerArgs) {
+            add = function (...innerArgs) {
+                outerArgs.push(...innerArgs);
+                return add;
+            };
+            add.toString = function () {
+                return outerArgs.reduce((x, y) => x + y);
+            }
+            return add
+        }
+        let res = add(1, 2)(3)(4)(5)(6, 7);
+        alert(res)
+
+    </script>
+
+    <script>
+        function add(...outArgs) {
+            add = function (innerArgs) {
+                outArgs.push(innerArgs)
+                return add;
+            };
+        }
+        add.toString = function () {
+            return outArgs.reduce((x, y) => x + y);
+            return add;
+        }
+
+        let res = add(1, 2)(3);
+        alert(res);
+
+    </script>
+
+    <script>
+        function currying(anonymous, length) {
+            return function add(...args) {
+                if (args.length >= length) {
+                    return anonymous(...args);
+                }
+                return currying(anonymous.bind(null, ...args), length - args.length);
+            }
+            let add = currying(function anonymous(...args) {
+                return args.reduce((x, y) => x + y);
+            }, 4);
+        }
+
+    </script>
+
+    <script>
+        function currying(anonymous, length) {
+            return function add(...args) {
+                if (args.length >= length) {
+                    return anonymous(...args);
+                }
+                return currying(anonymous.bind(null, ...args), length - args.length);
+
+            }
+            let add = currying(function anonymous(...args) {
+                return args.reduce((x, y) => x + y);
+
+
+            }, 4);
+        }
+    </script>
+
+    <script>
+        function currying(anonymous, length) {
+            return function add(...args) {
+                if (args.length >= length) {
+                    return anonymous(...args);
+                }
+            }
+            return currying(anonymous.bind(null, ...args), length - arg.length);
+        }
+        let add = currying(function anonymous(...args) {
+            return args.reduce((x, y) => x + y);
+        }, 4);
+    </script>
+    <script>
+        function currying(anonymous, length) {
+            return function add(...args) {
+                if (args.length >= length) {
+                    return anonymous(...args);
+                }
+
+            }
+            return currying(anonymous.bind(null, ...args), length - arg.length);
+        };
+        let add = currying(function anonymous(...args) {
+            return args.reduce((x, y) => x + y);
+        }, 4);
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+    <button></button>
+    <script>
+        //=this1:给元素的某个事件行为绑定方法，事件触发，方法执行，此时方法中的this一般是当前元素本身 
+        btn.onclick = function anonymous() {
+            console.log(this) //=元素
+        };
+        btn.addEventListener("click", function anonymous() {
+            console, log(this);//=元素
+        }, false)
+        btn.attachEvent("onclick", function anonymous() {
+            console.log(this);//=window
+        })
+
+
+
+
+    </script>
+
+
+
+    <script>
+        //=this2"普通函数执行，它里面的this是谁，取决于方法执行前面是否“点”，有的话，“点”前面是谁this就是谁，没有this指向为window（严格模式下是undefined）
+
+        //=hasOwnProperty:用来检测某个属性名是否属于当前对象的私有属性
+        //=in 是用来检测是和否为其属性（不论共有还是私有）
+        console.log(obj.hasOwnProperty("name"));//=ture
+        console.log(obj._proto_(Object.prototype))//false
+        console.log(Object.prototype.hasOwnProperty.call(obj, "name"))//=true
+
+    </script>
+
+
+
+    <script>
+        //=this3：构造函数执行（new xxx），函数中的this是当前类的实例
+        function fn() {
+            console.log(this);
+            //=this.xxx=xxx 是给当前实例设置私有属性；
+        }
+        let f = new fn;
+
+    </script>
+
+
+
+    <script>
+        //=this4:箭头函数中没有this，所用到的this都是其上下文中的this，箭头函数没有prototype(也就是没有构造器)，被能被new执行，没有argums实参集合（可以基于...args剩余运算符获取）
+
+        let obj = {
+            fn: () => {
+                console.log(this);
+            }
+        }
+        obj.fn();
+
+
+
+    </script>
+    <script>
+        ~ function () {
+            function call(context) {
+                context = context || window;
+                let args = [].slice.call(arguments, 1),
+                    result;
+                context.$fn = this;
+                result = context.$fn(...args);
+                delete context.$fn;
+                return result;
+            }
+            Function.prototype.call = call;
+        }();
+        function fn1() { console.log(1); }
+    </script>
+
+    <script>
+        ~function () {
+            function call(context) {
+                context = context || window;
+                let args = [].slice.call(arguments, 1),
+                    result;
+                context.$fn = this;
+                result = context.$fn(...args);
+                delete context.$fn;
+                return result;
+            }
+            Function.prototype.call = call;
+        }();
+        function fn1() { console.log(1); }
+    </script>
+    <script>
+        ~ function () {
+            function call(context) {
+                context = context || window;
+                let args = [].slice.call(arguments, 1),
+                    result;
+                context.$fn = this;
+                result = context.$fn(...args);
+                delete context.$fn;
+                return result;
+            }
+            Function.prototype.call = call;
+        }();
+        function fn1() { console.log(1); }
+
+    </script>
+
+
+    <script>
+        ~ function () {
+            function call(context) {
+                context = context || window;
+                let args = [].slice.call(arguments, 1),
+                    result;
+                context.$fn = this;
+                result = context.$fn(...args);
+                delete context.$fn;
+                return result;
+            }
+            Function.prototype.call = call;
+        }();
+        function fn1() { console.log(1); }
+
+
+
+    </script>
+    <script>
+//this5 基于call/apply/bind可以改变函数中this的指向（强行改变）call/apply的区别 1.第一个参数就是改变的this指向，写谁就是谁（特殊：非严格模式下，传递null/undefind也是window）唯一区别：执行函数，传递的方式有区别，call是一个一个传递，apply是吧需要传递的参数放到数组中整体传递func。call（【contex】，10，20） func。apply（【context】，【10，20】）
+//= bind：call/apply都是改变this的指向的同时直接把函数执行了，而bind不是立即执行函数，属于预先改变this和传递一些内容-“柯里化”
+
+
+    </script>
+
+    <script>
+        ~function anonymous(proto) {
+            function bind(context) {
+                if (context == undefined) {
+                    context = window;
+                }
+                //获取传递的实参集合
+                var args = [].slice.call(arguments, 1);
+                //需要最终执行的函数
+                var _this = this;
+                return function anonymous() {
+                    var amArg = [].slice.call(arguments, 0);
+                    _this.apply(context, args.concat(amArg));
+                };
+            }
+            proto.bind = bind;
+        }(Function.prototype)
+    </script>
+    <script>
+        ~function anonymous(proto) {
+            function bind(context) {
+                if (context == context) {
+                    context = window;
+                }
+                var args = [].slice.call(arguments, 1);
+                var _this = this;
+            }
+            return function anonymous() {
+                var amArg = [].slice.call(arguments, 0);
+                _this.apply(context, args.concat(amArg));
+            };
+            proto.bind = bind;
+        }(Function.protptype)
+    </script>
+
+    <script>
+        function call(context = window, ...args) {
+            context === null ? context = window : null;
+            let type = typeof context;
+            if (type !== "object" && type !== "function" && type !== "symbol") {
+                switch (type) {
+                    case "number":
+                        context = new Number(context);
+                        berak;
+                    case "string":
+                        context = new String(context);
+                        break;
+                    case "boolean":
+                        context = new Boolean(context);
+                        berak;
+                }
+                context.$fn = this;
+                let result = context.$fn(...args);
+                delete context.$fn;
+                return result;
+            }
+            proto.call = call;
+        } (Function.prototype)
+
+        let obj = {
+            fn(x, y) {
+                console.log(this, x, y);
+            }
+        }
+    </script>
+
+    <script>
+        function call(context = window, ...args) {
+            context === null ? context = window : null;
+            let type = typeof context;
+            if (type !== "object" && type !== "function" && type !== "symobol") {
+                switch (type) {
+                    case "number":
+                        context = new Number(context);
+                        break;
+                    case "string":
+                        context = new String(context);
+                        break;
+                    case "boolean":
+                        context = new Boolean(context);
+                        break;
+                }
+                context.$fn = this;
+                let result = context.$fn(...args);
+                delete context.$fn;
+                return result;
+            }
+            proto.call = call;
+        } (Function.prototype)
+
+
+        let obj = {
+            fn(x, y) {
+                console.log(this, x, y)
+            }
+        }
+
+
+
+
+
+
+    </script>
+
+    <script>
+//js中检测数据类型的四种方式
+//（1）type of 返回结果都是字符串，字符串中包含了对应的数据类型，“number”，“string”“object”“symbol”“undefined”
+//typeof null =》 object “局限性，null不是对象，而是空对象指针”检测数据或者正则的特殊的对象，返回结果都是object，不能用typeof检测数据还是正则，typeof function = function
+
+//= （2）类型2 instanceof/construcor
+//=检测某个实例是否属于这个类，他检测的底层机制，所有出现在其原型链上的类，检测结果都是类，{局限性}，由于可以基于———proto—或者prototype改动原型链的动向，所以基于instanceof检测出来的结果不一定是准确的，基本类型的值，连对象都不是，更没有———proto—，虽说也是所属类的实例，在js中也可以调取所属类原型上的方法，但是instanceof是不认的
+
+//检测数据类型4  ：obje.prototype.tostring：不是用来转换字符串的，而是返回当前实例所属类的信息，普遍格式“【object 所属类信息】”“【object object//number/string/boolean/symbol 】”
+//这种方式没有什么局限性，是检测数据类型最准确的方式
+//number/string/boolean/symbol他们的原型上都有
+//tostring转化为字符串
+//valueof  返回原始值（基本类型值）
+//array/regexp/function 等置类的原型上都有
+
+    </script>
+
+
+
+    <script>
+        var class2type = {};
+        var toString = class2type.toString;//=object.prototype.tostring
+        var hasOwn = class2type.hasOwnProperty;//object.prototype.hasownproperty
+        var fntostring = hasOwn.toString;//function.prototype.tostring;
+        var objectFunctionstring = fntostring.call(object);
+        // object.tostring() =>"function object(){native code}"
+
+        "Boolean  Numeber String Function Array Date RegExp Object Error Symbol".split("").forEach(function anonymous(items) { class2type["[object " + items + "]"] = items.tolowercase() });
+        function toType(obj) {
+            if (obj == null) {
+                return obj + "";
+            }
+
+            return typeof obj === "object" || typeof obj === "function" ?
+                class2type[toString.call(obj)] || "object" :
+                typeof obj;
+        }
+
+    </script>
+
+    <script>
+        var class2type = {};
+        var toString = class2type.toString;
+        var hasOwn = class2type.hasOwnProperty;
+        var fnToString = hasOwn.toString;
+        var objectFunctionString = fnToString.call(object);
+        "Boolean Number String Array Date RegExp Object Error Symbol".split("").forEach(function anonymous(item) {
+            class2type["[object " + item + "]"] = item.toLowerCase()
+        });
+        function toType(obj) {
+            if (obj == null) {
+                return obj + ""
+            }
+            return typeof obj === "object" || typeof obj === "function" ?
+                class2type[toString.call(obj)] || "object" :
+                typeof obj;
+
+        };
+    </script>
+
+
+    <script>
+        var class2type = {};
+        var toString = class2type.toString;
+        var hasOwn = class2type.hasOwnProperty;
+        var fnToString = hasOwn.toString;
+        var objectFunctionString = fnToString.call(object);
+        "Boolean Number String Function Array Date RegExp Object Error Symbol ".split("").forEach(function anonymous(item) {
+            class2type["[item " + item + "]"] = item.toLowerCase()
+        });
+        function toType(obj) {
+            if (obj === null) {
+                return obj + "";
+            }
+            return typeof obj === "object" || typeof obj === "function" ?
+                class2type[toString.call(obj)] || "object" :
+                typeof obj;
+
+
+        }
+
+    </script>
+    <script>
+    var isEmptyObject = function isEmptyObject(object){
+    var name;
+    for(name in obj){
+    return false
+    }
+    return ture;
+    };
+
+    var isArrayLike = function isArrayLike(obj){
+    var length = !!obj&&"length" in obj && obj.length,
+    type = toType(obj);
+    if(isFunction(obj) || isWindow(obj)) {
+    return false;
+    }
+    return type === "array" || length === 0 || typeof length === "numeber" && length >0 && (length - 1)in obj;
+    }; 
+</script>
+<script>
+var isEmptyObject = function isEmptyObject(obj){
+   var name;
+   for (name in obj){
+        return false;
+}
+return true;
+};
+
+var isArrayLike = function isArrayLike(obj){
+   var length = !!obj && "length" in obj && obj.length,
+     type = toType(obj);
+     if(isFunction(obj) || isWindow(obj)){
+         return false;
+     }
+   return type === "array" || length === 0 || typeof "number" && length > 0 && (length - 1) in obj;
+    };
+   
+    var isEmptyObject = function isEmptyObject(obj){
+      var name;
+      for (name in obj){
+          return false;
+      }
+
+    return true;
+    };
+
+    var isArrayLike = function isArraylike(obj){
+    var length = !!obj && "length" in obj && obj.length,
+     type = toType(obj);
+     if(isFunction(obj) || isWindow(obj)){
+         return false;
+     }
+     return type === "array" || length === 0 || typeof length === "number" && length > 0 && (length - 1)in obj;
+
+
+    };
+   </script>
+   <script>
+   var  clss2type = {};
+   var  toString  = class2type.toString;
+   var  hasOwn = class2type.hasOwnProperty;
+   var  fnToString = hasOwn.toString;
+   var  objectFunctionString = fnToString.call(object);
+   "Boolean Number String Function Array Date RegExp Object Error Symbol".split("").forEach(function anonymous(item){
+       class2type["[object "+ item +"]"]=item.toLowerCase()});
+     function toType(obj){
+     if(obj == null){
+      return null + "";
+     }
+     
+     return typeof obj === "object" || typeof obj === "function" ?
+     class2type[toString.call(obj)] || "object": 
+     typeof obj;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   </script>
+
+
+</body>
+
+</html>
