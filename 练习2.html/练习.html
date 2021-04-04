@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+   //类的多态：重载和重写，Java中重载：函数名相同，但是传参类型，数量不同或者返回值不一样，这相当于把一个函数重载了（js中没有类似于后台语言中的重载机制。js中的重载只是同一个方法，根据传参不同，实现不同的业务逻辑）
+   //重写：子类重写父类上的方法
+
+
+  //继承：子类继承父类中的属性和方法（js中的继承机制和其他后台语言是不一样的，有自己的独特处理方式）
+
+  //方案一：原型继承（子类的原型指向父类的一个实例）
+   //(1)并不会把父类中的方法克隆一份给子类，而是建立了子类和父类之前的原型链查找机制（2）重定向子类的原型后，默认丢失了原本的constructor属性（或者原本在原型上设置的属性和方法）（3）子类或者子类的实例，可以基于原型链”肆意“修改父类上的属性方法，对付类造成一些”不必要的破坏“（4）会把父类中私有的属性方法作为子类公有的属性方法继承过来（父类中不管是公有还是私有，最后都变为子类共有的）
+
+
+
+    function A(){
+        this.x = 100;
+    }
+    A.prototype.getx = function getx(){
+        console.log(x)
+    }
+
+    function B(){
+        this.y = 200;
+    }
+    B.prototype = new A;
+    B.prototyoe.getb = function getb(){
+        console.log(b)
+    };
+    let b = new B;
+
+</script>
+
+<script>
+//call继承
+//call继承：把父类当作普通函数执行，让其执行的时候，方法中的this变为子类的实例即可
+// (1)只能继承父类中的私有属性（继承的私有属性赋予值给与子类实例的私有属性）而且类似拷贝过来一份，而不是链式查找
+//（2）因为只是把父亲当作普通的方法执行，所以父亲原型上的公有属性方法无法被继承过来
+
+
+function A(){
+        this.x = 100;
+    }
+    A.prototype.getx = function getx(){
+        console.log(x)
+    }
+
+    function B(){
+        this.y = 200;
+        //call继承
+        A.call(this);//=this.x=100 ,b.x=100
+    }
+    B.prototype = new A;
+    B.prototyoe.getb = function getb(){
+        console.log(b)
+    };
+    let b = new B;
+</script>
+<script>
+//寄生组合继承：call继承+变异版的原型继承共同完成的，call继承实现：私有到私有  原型继承实现：公有到公有
+
+function A(){
+        this.x = 100;
+    }
+    A.prototype.getx = function getx(){
+        console.log(x)
+    }
+
+    function B(){
+        this.y = 200;
+        //call继承
+        A.call(this);//=this.x=100 ,b.x=100
+    }
+    //=object.create(obj)创建一个空对象，让_proto_指向obj（把obj作为空对象的原型）
+    B.prototype = Object.create(A.prototype);
+    B.prototype.constrctor = B
+    B.prototyoe.getb = function getb(){
+        console.log(b)
+    };
+    let b = new B;
+
+</script>
+<script>
+//Es6中创建类用class
+class A{
+  constructor(){
+      this.x = 1000;
+  }
+  //=这样和构造函数中的this.xxx=xxx没什么区别，设置的是私有属性（es7）
+  num = 100;
+  //=设置到A.prototype上的方法
+  getX(){
+    console.log(this.x);
+   }
+   //=把A当作普通对象设置的属性和方法
+   static n = 200;
+   static getN(){}
+}
+console.log(newA)
+//=extends继承和寄生组合继承基本类似
+class A{
+  constructor(){
+      this.x = 100
+  }
+  getX(){
+      console,log(this.x);
+  }
+}
+
+
+class B extends A{
+  constructor(){
+      super() //=一旦使用extends实现继承，只要自己写了construtor，就必须写super《=》A.call(this)
+      this.b = 200
+  }
+  getY(){
+      console,log(this.y);
+  }
+
+
+}
+//=真是项目中使用继承的地方
+// 1.react创建类的组件  2.自己写插件或者类库的时候
+</script>
+<script>
+//=（浏览器底层渲染机制）
+//浏览器是多线程  页面渲染是单线程（js是单线程）
+//进程：一个程序（一个进程中可能包含多个线程）
+//线程：程序中要做的事情（一个线程同时只能做一个事情）
+//在页面加载的过程中，如果遇到：【link导入外部样式资源】浏览器会新开辟一个线程，去服务器获取对应的资源条件（不会阻碍主线程的线程）
+//（style内嵌样式）
+//正常从上到下解析而已（解析完再继续解析dom的结构）
+//（在真实项目中，如果css样式代码不是很多（再或者是移动端的项目），我们应该使用内嵌式，以此来减少http资源的请求，提高页面渲染的速度）
+
+
+//（@import导入样式）（同步）
+//此时不会开辟新的线程去加载资源文件，而是让主线程去获取，这样阻碍了dom结构的继续渲染，只有等把外部样式导入进来，并且解析后，才会继续渲染结构；
+
+//（http）
+//网络请求或者http请求的最大并发数=》大部分浏览器都维持在六个左右
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+</body>
+</html>
