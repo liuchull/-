@@ -146,7 +146,49 @@ class B extends A{
 //网络请求或者http请求的最大并发数=》大部分浏览器都维持在六个左右
 
 
+</script>
 
+<script>
+    //页面加载中遇到js（js中会有操作dom的代码）
+ //【默认script src = “xxx”】主线程会从服务器获取到js资源，并且把js资源进行解析加载，加载完成后继续渲染dom结构
+ // 现代浏览器都有完善的代码扫描机制：如果遇到script需要同步加载和渲染代码，浏览器在渲染js的时候，同时会向下继续扫描代码，如果发现有一些异步的资源代码，此时就开始加载请求了
+ //【如果设置了defer或者async】都是让其变为异步获取资源（不会阻碍dom的渲染）1.defer可以遵循原有的加载顺序，获取后按照顺序去依次渲染js  2.async是无序的（谁先获取到先执行谁）
+ // 因为在js中还有可能操作元素的样式，所有哪怕都是异步请求资源的情况下，js先加载回来，也要等到他之前发送的css加载并渲染完成后才会执行js代码   
+
+
+ //一（DOMContentLoaded事件）：当DOM结构加载完成后就会触发
+   //——=》dom树有了，并且js也执行加载了，此时触发这个事件
+ //二（load事件）：当所有资源都加载完成后才会触发
+  // =》包含了需要等待图片等资源也都加载完才触发     
+ //三（JQ类库中：$（function（）{}））或者 $(document.ready(function(){}))
+  // =>1.当DOM结构加载完才会执行函数中的代码2.原理就是应用DOMContentLoaded事件完成 3.DOMContentLoaded在低版本浏览器中不兼容，不兼容使用onreadystatechange事件代替，在这个事件中监听document.readyState值，值为complete代表DOM结构加载完成
+
+
+  
+  //【为啥要把link写在结构的上面，把script写在结构的下面】
+  //=》link放到顶部是为了更快加载回来css
+  //=》script放到底部是为了获取DOM元素或者不阻碍DOM的渲染
+
+</script>
+
+
+
+<script>
+//DOM的重绘和回流 repair&reflow
+// 重绘：元素样式的改变（但宽高，大小，位置等不变）；例如outline，visibility，color，backgroud—color等
+//回流：元素的大小或者位置发生改变（当页面布局和几何信息发生变化的时候），触发了重新布局，导致渲染树重新计算布局和渲染：如添加或删除可见的DOM元素，元素的位置发生变化，元素的尺寸发生变化，内容发生变化（比如文本变化或图片被另一个不同尺寸的图片所替代）；页面一开始渲染的时候（这个无法避免）；因为回流量是根据视口的大小来计算元素的位置和大小的，所以浏览器的窗口尺寸变化也能引起回流
+   // 注意：回流一定能触发重绘，而重绘不一定会回流
+
+
+ //【避免DOM的回流】  
+ //1. 放弃传统操作dom的时代，基于vue/react开始数据影响视图模式
+ //2.分离读写操作（现代的浏览器都有渲染队列的机制）：offsettop~会刷新渲染队列
+ //3.样式集中改变：div。style。csstext = “width：20px height：10px”
+ //4.缓存布局信息 div。style。left = div。offsetleft + 1 + px改为var curleft = div。offsetleft  div。style。left = div。curleft + 1 + px改
+ //5.元素批量修改：模板字符串拼接
+ //6.动画效果应用到position属性为absolute或fixed的元素上（脱离文档流）
+ //7.css3硬件加速（gpu加速）
+ //8.避免table布局和使用css的javascript表达式  
 
 
 
@@ -164,6 +206,25 @@ class B extends A{
 
 
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 </body>
