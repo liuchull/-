@@ -227,6 +227,126 @@ class B extends A{
 //1.捕获到当前操作的行为（把操作信息获取到），铜鼓哟创建mouseevent等类的实例，得到事件对象ev
 //2.通知所有绑定的方法（符合执行条件的）开始执行，并且把ev当作实参传递给每个方法，所以在每个方法中得到的事件对象其实是一个
 //3。后面在重新出发这个时间行为，会重新获取本次操作的信息，用新的信息替换老的信息，然后再继续之前的步骤
+</script>
+
+
+
+<script>
+// 1.A标签的默认行为：页面跳转  2.A标签的默认行为：锚点定位
+//2.阻止它的默认行为 1.href=“javascript” 2.点击a标签：先触发click，然后再去执行href的跳转
+//link.onClick = function(ev){返回一个false，相当于结束后面即将执行的步骤}return false；}
+//link.onclick = function(ev){ev.preventDefalut()};
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<style>
+.context{
+   position: fixed;
+   top:0;
+   left: 0;
+   box-sizing: border-box;
+   padding: p 5px;
+   width: 100px;
+   border: 1px solid lightcoral;
+}
+.context li {
+    line-height: 35px;
+    border-bottom: 1px dashed #eee;
+
+}
+
+.context li:nth-last-child(1){
+    border-bottom: none;
+}
+
+
+
+
+
+
+
+</style>
+
+<ul class="context">
+    <li>大哥哥</li>
+    <li>小姐姐</li>
+</ul>
+
+
+<script>
+  let context = document.querySelector(".context");
+  window.addEventListener("contextmenu",function(ev){ev.preventDefault()
+   context.style.display = "block"
+   context.style.top = ev.clientY+"px";
+   context.style.left =  ev.clientX+"px";
+  
+  }
+  
+  
+  
+  
+  )
+ </script>
+
+
+<input type="text"  id="cardInp">
+<script>
+//=>键盘事件对象  code&key：存储的都是按键，code更细致   keycode&which 存储的都是按键对应的代码值 
+// 方向键  37 38 39 40 =》左上右下
+//空格32
+
+
+cardInp.onKeyup = cardInp.onKeydown = function(ev){
+    console.log(ev.keyCode)
+}
+cardInp.onKeyup = cardInp.onKeydown = function(ev){
+    let val = this.value;
+    reg = /[^0-9x]/g;
+    this.value = val.replace(reg,"");
+    if(this.value.length>=18){
+        let arr = [8,13,37,38,39,40,46];
+        if(!arr.includes(ev.keyCode)){
+            ev.preventDefault();
+        }
+    }
+    if(ev.keyCode === 13){
+        alert(this.value)
+    }
+}
+
+
+</script>
+
+
+
+
+
+<script>
+//事件的传播机制 1.捕获阶段：从最外层向最里层事件源依次进行查找（目的：是为冒泡阶段事先计算好传播的层级路径） =》CAPTUREING PHASE:1  2：目标阶段：当前元素的相关事件行为触发 =》AT_TARGET :2   3:冒泡阶段：触发当前元素的某一个事件行为，不仅它的这个行为被触发了，而且它所有的祖先元素（一直到window）相关的事件行为都会被依次触发（从内到外的顺序）=》BUBBLING_PHASE:3
+
+//二 DOM0 绑定的方法，只能在目标阶段和冒泡阶段触发时执行  DOM2绑定的方法，我们可以控制在捕获阶段执行
+// outer。addEventListener（“click”，function（）{//=>false代表在冒泡阶段执行此方法 //=true代表在捕获阶段执行此方法}，false）
+
+
+//三  1.mouseover本身不是进入，而是看鼠标再谁上面，从子元素进入父元素，触发父元素的mouseover，从父元素进入子元素触发父元素的mouseout   2.mouseenter默认阻止了时间的冒泡传播，从大容器进入小盒子，从小盒子重新进入到大容器，大容器的enter和leave都不会触发（因为它认为你还在我的容器中，不存在离开和从重新进入）
+
+//四  mouseover VS mouseenter
+// 1.盒子中有后代元素的，我们尽可能用mouseener 2.需要基于冒泡传播干什么事情，我们只能用mouseover 
+
+
+
+
+
 
 
 
@@ -241,22 +361,6 @@ class B extends A{
 
 
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

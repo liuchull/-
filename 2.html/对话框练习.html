@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>对话框</title>
+    <link rel="stylesheet" href="C:\Users\lc123456\Desktop\text5\2.html\1.css">
+    <style>
+        .all {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, .8);
+            user-select: none;
+            transition: opacity .3s;
+        }
+
+        .main {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            margin-left: -200px;
+            z-index: 9999;
+            width: 400px;
+            background: #fff;
+            border-radius: 3px;
+            overflow: hidden;
+            transition: transform .3s;
+            transform: translateY(-1000px);
+        }
+
+        .header {
+            position: relative;
+            box-sizing: border-box;
+            padding: 0px 10px;
+            height: 40px;
+            line-height: 40px;
+            background-color: skyblue;
+            cursor: move;
+        }
+
+        .title {
+
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: normal;
+            margin: 0;
+            padding: 0;
+
+
+
+
+        }
+
+
+
+        .close {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            font: normal;
+            color: snow;
+            font-family: 'Courier New';
+            cursor: pointer;
+        }
+
+        .body {
+            padding: 30px 10px;
+            line-height: 30px;
+            font-size: 16px;
+
+
+        }
+
+        .footer {
+            text-align: right;
+            padding: 10px 10px;
+            border-top: 1px solid #eee;
+
+
+
+
+
+
+        }
+
+
+        .cancel,
+        .confirm {
+            margin: 0 5px;
+            padding: 0 15px;
+            height: 28px;
+            line-height: 28px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+
+        }
+
+        .confirm {
+            color: #000;
+            background: #2299ee;
+        }
+
+        .cancel {
+            color: #000;
+            background-color: #ddd;
+
+        }
+    </style>
+
+
+
+
+
+</head>
+
+<body>
+    <div class="all">
+        <div class="main">
+            <div class="header">
+                <h3 class="title">系统温馨提示</h3>
+                <i class="close">X</i>
+            </div>
+            <div class="body">
+                你一直在想我吗？
+            </div>
+            <div class="footer">
+                <button class="confirm">在想</button>
+                <button class="cancel">不想</button>
+
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    let confirm = document.querySelector(".confirm")
+    confirm.onclick = function () {
+        alert("那就好")
+    };
+    let cancel = document.querySelector(".cancel")
+    cancel.onclick = function () {
+        alert("不行，必须想")
+    }
+    let $main = document.querySelector(".main"),
+        $header = document.querySelector(".header"),
+        $all = document.querySelector(".all");
+    $header.addEventListener("mousedown", down);
+    function down(ev) {
+        this.startX = ev.clientX;
+        this.startY = ev.clientY;
+        this.startT = $main.offsetTop;
+        this.startL = $main.offsetLeft;
+        this._MOVE = move.bind(this);
+        this._UP = up.bind(this);
+        document.addEventListener("mousemove", this._MOVE);
+        document.addEventListener("mouseup", this._UP);
+
+
+    }
+
+    function move(ev) {
+        let curL = ev.clientX - this.startX + this.startL,
+            curT = ev.clientY - this.startY + this.startT;
+        let minL = 0,
+            minT = 0,
+            maxL = $all.offsetWidth - $main.offsetWidth,
+            maxT = $all.offsetHeight - $main.offsetHeight;
+        curL = curL < minL ? minL : (curL > maxL ? maxL : curL);
+        curT = curT < minT ? minT : (curT > maxT ? maxT : curT);
+
+
+
+        $main.style.left = curL + "px";
+        $main.style.top = curT + "px";
+        $main.style.marginLeft = 0;
+
+    }
+
+    function up(ev) {
+        document.removeEventListener("mousemove", this._MOVE);
+        document.removeEventListener("mouseup", this._UP);
+
+    }
+
+</script>
+
+</html>

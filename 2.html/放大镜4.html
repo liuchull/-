@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>放大镜4</title>
+    <style>
+        .clearfix:after {
+            visibility: hidden;
+            display: block;
+            font-size: 0;
+            content: " ";
+            clear: both;
+            height: 0;
+        }
+        .magnifer{
+         box-sizing: border-box;
+         width: 600px;
+         margin: 20px auto;
+         }
+        .magnifer .abbre{
+        position: relative;
+        box-sizing: border-box;
+        width: 200px;
+        height: 200px;
+        float: left;
+
+        } 
+        .magnifer .abbre img{
+        width: 100%;
+        height: 100%;
+        }
+        .magnifer .abbre .mark{
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        cursor: move;
+        display: none;
+        top: 0;
+        left: 0;
+        background-color: salmon;
+
+
+        }
+        .magnifer .origin{
+           display: none;
+           position: relative;
+           box-sizing: border-box;
+           width: 350px;
+           height: 400px;
+           overflow: hidden;
+           float: left;
+        }
+        .magnifer .origin img{
+         top: 0;
+         left: 0;
+         position: absolute;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+    </style>
+
+</head>
+<body>
+    <section class="magnifer clearfix">
+     <div class="abbre" id="abbre">
+        <img src="C:\Users\lc123456\Desktop\IMG20200113225235.jpg" alt="">
+        <div class="mark">
+        </div>
+     </div>
+     <div class="origin">
+         <img src="C:\Users\lc123456\Desktop\IMG20200113225234.jpg" alt="">
+</div>
+</section>
+ <script src="C:\Users\lc123456\Desktop\text5\2.html\1.js"></script>
+ <script>
+  let $abbre = $(".abbre"),
+      $mark  = $abbre.find(".mark"),
+      $origin = $(".origin"),
+      $originImg = $origin.find("img");
+  let abbreW = $abbre.outerWidth(),
+      abbreH = $abbre.outerHeight(),
+      abbreOffset = $abbre.offset(),
+      markW = $mark.outerWidth(),
+      markH = $mark.outerHeight(),
+      originW = $origin.outerWidth(),
+      originH = $origin.outerHeight(),
+      originImgW = abbreW / markW * originW,
+      originImgH = abbreH / markH * originH;
+    $originImg.css({
+      width:originImgW,
+      height:originImgH
+    })  
+
+    function computedMark(ev){
+    let markL = ev.clientX - abbreOffset.left - abbreW/2, 
+        markT = ev.clientY - abbreOffset.top - abbreH/2;
+    let minL = 0,
+        minT = 0,
+        maxL = abbreW - markW,
+        maxT = abbreH - markH;
+    markL = markL < minL? minL: (markL>maxL? maxL: markL);
+    MarkT = markT < minT? minT: (markT>maxT? maxT: markT);
+    $mark.css({
+        left:markL,
+        top:markT
+    })
+    $originImg.css({
+        left:-markL/abbreW*originImgW,
+        top:-markT/abbreH*originImgH
+    })
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+    $abbre.on("mouseenter",function(ev){
+        $mark.css("display","block")
+ 
+      $origin.css("display","block")
+      computedMark(ev)
+    }),
+    $abbre.on("mouseleave",function(ev){
+        $mark.css("display","none")
+ 
+      $origin.css("display","none")
+    })
+    $abbre.on("mousemove",computedMark)
+    
+      
+
+
+
+
+ </script>
+ 
+
+ <script>
+    abbre.addEventListener("mousedown",down);
+    function down(ev){
+        this.startX = ev.clientX;
+        this.startY = ev.clientY;
+        this.startL = this.offsetLeft;
+        this.startT = this.offsetTop;
+        this._MOVE = move.bind(this);
+        this._UP = up.bind(this);
+    
+        document.addEventListener("mousemove",this._MOVE);
+        document.addEventListener("mouseup",this._UP);
+  
+  }
+  
+    function move(ev) 
+    {let curL = ev.clientX - this.startX + this.startL,
+         curT = ev.clientY - this.startY + this.startT;
+      this.style.top = curT + "px";
+      this.style.left = curL + "PX";   
+  }
+  
+    function up(ev){
+      document.removeEventListener("mousemove",this._MOVE);
+      document.removeEventListener("mouseup",this._UP);
+    }
+  
+  
+  
+  
+  </script>
+
+
+
+
+
+
+
+</body>
+</html>

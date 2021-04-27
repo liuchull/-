@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>界面移动</title>
+</head>
+  <style>
+   .box{
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 0;
+    left: 0;
+    cursor: move;
+    background-color: red
+    ;
+
+
+
+
+
+   }
+
+
+
+
+
+
+
+
+  </style>
+
+
+
+
+
+<body>
+    <div class="box" id="box"></div>
+</body>
+<script>
+box.addEventListener("mousedown",down)
+function down(ev){
+   //1.记录鼠标和盒子的起始位置（需要在move方法中用到，所以把值都记录在元素的自定义属性上，这样在move中就可以通过自定义属性来会获取）   
+      this.startX = ev.clientX;
+      this.startY = ev.clientY;
+      this.startL = this.offsetLeft;
+      this.startT = this.offsetTop;
+      this._MOVE = move.bind(this);
+      this._UP = up.bind(this);
+  //this.setCapture()=》适用于ie
+      document.addEventListener("mousemove",this._MOVE);
+      document.addEventListener("mouseup",this._UP);
+
+}
+function move(ev){
+      let curL = ev.clientX - this.startX + this.startL;
+      let curT = ev.clientY - this.startY + this.startT;
+      this.style.top = curT + "px";
+      this.style.left = curL + "px";
+  }
+    
+  function up(ev){
+    document.removeEventListener("mousemove",this._MOVE)
+  
+      document.removeEventListener("mouseup",this._UP);
+    
+  }
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
