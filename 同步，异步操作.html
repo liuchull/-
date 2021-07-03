@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+<!-- js本身是单线程的（浏览器只分配一个线程供js代码自上而下运行）
+=》在js中大部分操作都是同步编程，当前任务不完成，下一个任务是无法继续执行的，换句话说，任务是统一执行的
+=》但是对于某些特殊的需求，也是需要按照异步编程的思维去处理的
+  【浏览器端】
+  ：定时器是异步编程
+  ：js中的事件绑定是异步编程
+  ：ajax/fetch请求的发送（http事务）
+  ：promise设计模式管控异步编程的（包括async/await。。。）
+【node端】
+   +progress.nextTick
+   +setImmediate
+   +FS进行I/0操作可以是异步操作
+    。。
+ 浏览器分配一个线程，让代码在栈内存中自上而下执行，主栈代码执行完线程空闲下来了（主线程一旦空闲下来，首先倒事件队列的微任务中查找“是否有需要执行的任务，但是只要主线程没有空闲下来，不论任务队列中的方法是否到达执行的条件，也都不能执行
+   ：event queue  事件队列 预先吧一些不立即执行的方法进行储存，方便后期找到执行（分为宏任务和微任务，如果微任务中没有需要执行的方法，则到宏任务中继续查找）=》这套事件机制被称为事件循环机制 event loop ”）
+
+
+   ： 后台语言中的异步：同时开辟多个线程，同时做多件事情
+   ： js中的异步：它没有异步，不管怎么样同时只能做一件事情，但是能够基于event queue/event loop 机制，把一些方法延后执行而已（除了发送ajax请求外，因为此时浏览器分配一个线程继续执行js，另外一个分配一个线程去发送HTTP事务）
+
+
+
+-->
+  <!-- 核心都是ajax操作：jq中的$.ajax是帮我们封装好的ajax库；axios也是基于promise封装的ajax库
+   fetch是浏览器内置的发送请求的类（天生就是promise管控的） 、
+  
+  ajax的状态：xhr.readyState
+     unsent 0 创建完xhr默认就是0
+     opend  1  已经完成open操作
+     headers—_received 2 服务器已经把响应头信息返回了
+     loading 3 响应主体正在返回中
+     done 4 响应主体已经返回
+
+  XHR.open的第三个参数控制的同步异步指的是：从当前send发送请求，算任务开始，一直到ajax状突为4才算任务结束（同步是：再次期间所有的任务都不去处理，而异步是：在此期间，该干什么就就干什么）  =>异步在send之后，会把这个请求的任务放在eventQueue中（宏任务）
+    let xhr = new XMLhttpRequest;
+    xhr.open("get",dasfafasd,true);
+    xhr.onreadystatechange = function(){
+      //=监听到状态改变后才会触发的事件
+      console。log（xhr.readystate）
+
+    };
+    xhr.send();
+
+  
+  -->
+ 
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

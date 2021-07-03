@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding:0;
+    }
+    .ow{
+        width: 200px;
+        height: 100px;
+        background-color: red;
+        cursor:move;
+       position: absolute;
+       top: 0;
+       left: 0;
+
+    }
+</style>
+<body>
+    <div class="ow" id="ow"></div>
+    <script>
+        let $body = document.querySelector(".body")
+        let $ow   = document.querySelector(".ow")
+       ow.addEventListener("mousedown",down)
+     function down(ev){
+      this.startX = ev.clientX;
+      this.startY = ev.clientY;
+      this.startL = this.offsetLeft;
+      this.startT = this.offsetTop;
+      this._MOVE = move.bind(this);
+      this._UP = up.bind(this);
+
+    
+      document.addEventListener("mousemove",this._MOVE);
+      document.addEventListener("mouseup",this._UP); 
+ 
+     }  
+     function move(ev){
+       let curL = ev.clientX - this.startX + this.startL;
+       let curT = ev.clientY - this.startY + this.startT;
+       let minL = 0;
+       let minT = 0;  
+        curL = curL<minL? minL: (curL>maxL? maxL: curL );
+        curT = curT<minT? minT: (curT>maxT? maxT: curT );
+       this.style.left = curL + "px";
+       this.style.top = curT + "px";
+
+
+
+
+
+     }
+     function up(ev){
+        document.removeEventListener("mousemove",this._MOVE)
+  
+      document.removeEventListener("mouseup",this._UP);
+     }
+
+
+
+    </script>
+</body>
+</html>

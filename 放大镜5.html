@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>放大镜5</title>
+</head>
+
+
+<style>
+    
+    .magnifer{
+       width: 800px;
+       box-sizing: border-box;
+       margin: 20px auto;
+
+
+
+    }
+    .magnifer .abbre{
+        position: relative;
+        box-sizing: border-box;
+        width: 150px;
+        height: 150px;
+
+        float:left;
+    }
+    
+  
+    .magnifer .abbre .mark{
+        display: block;
+        position: absolute; 
+        top: 0;
+        left: 0;
+        width: 40px;
+        height: 40px;
+        cursor: move;
+        background-color: salmon;
+    }
+    
+    .magnifer .abbre img{
+      width: 100%;
+      height: 100%;
+
+    }
+    .magnifer .origin{
+        float: left;
+        display: block;
+        position: relative;
+        width: 300px;
+        height: 300px;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+    .magnifer .origin img{
+        position: absolute;
+        top: 0;
+        left: 0;
+      
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+</style>
+<body>
+    <section class="magnifer">
+        <div class="abbre">
+            <img src="C:\Users\lc123456\Desktop\IMG20200113225235.jpg" alt="">
+            <div class="mark"></div>
+        </div>
+
+
+
+        <div class="origin">
+       <img src="C:\Users\lc123456\Desktop\IMG20200113225234.jpg" alt="">
+        </div>
+
+
+
+
+
+    </section>
+    <script src="C:\Users\lc123456\Desktop\text5\2.html\1.js"></script>
+    <script>
+     let $abbre = $(".abbre");
+     let $mark  = $abbre.find(".mark");
+     let $origin = $(".origin");
+     let $originImg = $origin.find("img")
+     let abbreW = $abbre.outerWidth();
+     let abbreH = $abbre.outerHeight();
+     let markH = $mark.outerHeight();
+     let markW = $mark.outerWidth();
+     let abbreOffset = $abbre.offset();
+     let originH = $origin.outerHeight();
+     let originW = $origin.outerWidth();
+     let originImgW = abbreW/markW*originW;
+     let originImgH = abbreH/markH*originH;
+         $originImg.css({
+             width:originImgW,
+             height:originImgH
+         })
+
+    function  computedMark(ev){
+       let markL =   ev.clientX - abbreOffset.left- markW/2;
+       let markT =   ev.clientY - abbreOffset.top - markH/2;
+       let minL = 0;
+       let minT = 0;
+       let maxL = abbreW - markW;
+       let maxT = abbreH - markH;
+        markL = markL < minL? minL: (markL>maxL? maxL: markL);
+        markT = markT < minT? minT: (markT>maxT? maxT: markT);
+       $mark.css({
+           left:markL,
+           top:markT
+       })
+       $originImg.css({
+           left:-markL/abbreW*originImgW,
+           top:-markT/abbreH*originImgH
+
+       })
+
+
+
+
+
+
+
+
+
+
+    }    
+
+     
+     
+
+
+
+
+
+
+
+
+      $abbre.on("mouseenter",function(ev){
+          $mark.css("display","block");
+          $origin.css("display","block");
+          computedMark(ev);
+        });
+      $abbre.on("mouseleave",function(ev){
+        $mark.css("display","none");
+        $origin.css("display","none");
+
+      })  
+      $abbre.on("mousemove",computedMark)
+
+
+
+
+
+
+    </script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+   //类的多态：重载和重写，Java中重载：函数名相同，但是传参类型，数量不同或者返回值不一样，这相当于把一个函数重载了（js中没有类似于后台语言中的重载机制。js中的重载只是同一个方法，根据传参不同，实现不同的业务逻辑）
+   //重写：子类重写父类上的方法
+
+
+  //继承：    子类继承父类中的属性和方法（js中的继承机制和其他后台语言是不一样的，有自己的独特处理方式）
+
+  //方案一：原型继承（子类的原型指向父类的一个实例）
+   //(1)并不会把父类中的方法克隆一份给子类，而是建立了子类和父类之前的原型链查找机制（2）重定向子类的原型后，默认丢失了原本的constructor属性（或者原本在原型上设置的属性和方法）（3）子类或者子类的实例，可以基于原型链”肆意“修改父类上的属性方法，对付类造成一些”不必要的破坏“（4）会把父类中私有的属性方法作为子类公有的属性方法继承过来（父类中不管是公有还是私有，最后都变为子类共有的）
+
+
+
+    function A(){
+        this.x = 100;
+    }
+    A.prototype.getx = function getx(){
+        console.log(x)
+    }
+
+    function B(){
+        this.y = 200;
+    }
+    B.prototype = new A;
+    B.prototyoe.getb = function getb(){
+        console.log(b)
+    };
+    let b = new B;
+
+</script>
+
+<script>
+//call继承
+//call继承：把父类当作普通函数执行，让其执行的时候，方法中的this变为子类的实例即可
+// (1)只能继承父类中的私有属性（继承的私有属性赋予值给与子类实例的私有属性）而且类似拷贝过来一份，而不是链式查找
+//（2）因为只是把父亲当作普通的方法执行，所以父亲原型上的公有属性方法无法被继承过来
+
+
+function A(){
+        this.x = 100;
+    }
+    A.prototype.getx = function getx(){
+        console.log(x)
+    }
+
+    function B(){
+        this.y = 200;
+        //call继承
+        A.call(this);//=this.x=100 ,b.x=100
+    }
+    B.prototype = new A;
+    B.prototyoe.getb = function getb(){
+        console.log(b)
+    };
+    let b = new B;
+</script>
+<script>
+//寄生组合继承：call继承+变异版的原型继承共同完成的，call继承实现：私有到私有  原型继承实现：公有到公有
+
+function A(){
+        this.x = 100;
+    }
+    A.prototype.getx = function getx(){
+        console.log(x)
+    }
+
+    function B(){
+        this.y = 200;
+        //call继承
+        A.call(this);//=this.x=100 ,b.x=100
+    }
+    //=object.create(obj)创建一个空对象，让_proto_指向obj（把obj作为空对象的原型）
+    B.prototype = Object.create(A.prototype);
+    B.prototype.constrctor = B
+    B.prototyoe.getb = function getb(){
+        console.log(b)
+    };
+    let b = new B;
+
+</script>
+<script>
+//Es6中创建类用class
+class A{
+  constructor(){
+      this.x = 1000;
+  }
+  //=这样和构造函数中的this.xxx=xxx没什么区别，设置的是私有属性（es7）
+  num = 100;
+  //=设置到A.prototype上的方法
+  getX(){
+    console.log(this.x);
+   }
+   //=把A当作普通对象设置的属性和方法
+   static n = 200;
+   static getN(){}
+}
+console.log(newA)
+//=extends继承和寄生组合继承基本类似
+class A{
+  constructor(){
+      this.x = 100
+  }
+  getX(){
+      console,log(this.x);
+  }
+}
+
+
+class B extends A{
+  constructor(){
+      super() //=一旦使用extends实现继承，只要自己写了construtor，就必须写super《=》A.call(this)
+      this.b = 200
+  }
+  getY(){
+      console,log(this.y);
+  }
+
+
+}
+//=真是项目中使用继承的地方
+// 1.react创建类的组件  2.自己写插件或者类库的时候
+</script>
+<script>
+//=（浏览器底层渲染机制）
+//浏览器是多线程  页面渲染是单线程（js是单线程）
+//进程：一个程序（一个进程中可能包含多个线程）
+//线程：程序中要做的事情（一个线程同时只能做一个事情）
+//在页面加载的过程中，如果遇到：【link导入外部样式资源】浏览器会新开辟一个线程，去服务器获取对应的资源条件（不会阻碍主线程的线程）
+//（style内嵌样式）
+//正常从上到下解析而已（解析完再继续解析dom的结构）
+//（在真实项目中，如果css样式代码不是很多（再或者是移动端的项目），我们应该使用内嵌式，以此来减少http资源的请求，提高页面渲染的速度）
+
+
+//（@import导入样式）（同步）
+//此时不会开辟新的线程去加载资源文件，而是让主线程去获取，这样阻碍了dom结构的继续渲染，只有等把外部样式导入进来，并且解析后，才会继续渲染结构；
+
+//（http）
+//网络请求或者http请求的最大并发数=》大部分浏览器都维持在六个左右
+
+
+</script>
+
+<script>
+    //页面加载中遇到js（js中会有操作dom的代码）
+ //【默认script src = “xxx”】主线程会从服务器获取到js资源，并且把js资源进行解析加载，加载完成后继续渲染dom结构
+ // 现代浏览器都有完善的代码扫描机制：如果遇到script需要同步加载和渲染代码，浏览器在渲染js的时候，同时会向下继续扫描代码，如果发现有一些异步的资源代码，此时就开始加载请求了
+ //【如果设置了defer或者async】都是让其变为异步获取资源（不会阻碍dom的渲染）1.defer可以遵循原有的加载顺序，获取后按照顺序去依次渲染js  2.async是无序的（谁先获取到先执行谁）
+ // 因为在js中还有可能操作元素的样式，所有哪怕都是异步请求资源的情况下，js先加载回来，也要等到他之前发送的css加载并渲染完成后才会执行js代码   
+
+
+ //一（DOMContentLoaded事件）：当DOM结构加载完成后就会触发
+   //——=》dom树有了，并且js也执行加载了，此时触发这个事件
+ //二（load事件）：当所有资源都加载完成后才会触发
+  // =》包含了需要等待图片等资源也都加载完才触发     
+ //三（JQ类库中：$（function（）{}））或者 $(document.ready(function(){}))
+  // =>1.当DOM结构加载完才会执行函数中的代码2.原理就是应用DOMContentLoaded事件完成 3.DOMContentLoaded在低版本浏览器中不兼容，不兼容使用onreadystatechange事件代替，在这个事件中监听document.readyState值，值为complete代表DOM结构加载完成
+
+
+  
+  //【为啥要把link写在结构的上面，把script写在结构的下面】
+  //=》link放到顶部是为了更快加载回来css
+  //=》script放到底部是为了获取DOM元素或者不阻碍DOM的渲染
+
+</script>
+
+
+
+<script>
+//DOM的重绘和回流 repair&reflow
+// 重绘：元素样式的改变（但宽高，大小，位置等不变）；例如outline，visibility，color，backgroud—color等
+//回流：元素的大小或者位置发生改变（当页面布局和几何信息发生变化的时候），触发了重新布局，导致渲染树重新计算布局和渲染：如添加或删除可见的DOM元素，元素的位置发生变化，元素的尺寸发生变化，内容发生变化（比如文本变化或图片被另一个不同尺寸的图片所替代）；页面一开始渲染的时候（这个无法避免）；因为回流量是根据视口的大小来计算元素的位置和大小的，所以浏览器的窗口尺寸变化也能引起回流
+   // 注意：回流一定能触发重绘，而重绘不一定会回流
+
+
+ //【避免DOM的回流】  
+ //1. 放弃传统操作dom的时代，基于vue/react开始数据影响视图模式
+ //2.分离读写操作（现代的浏览器都有渲染队列的机制）：offsettop~会刷新渲染队列
+ //3.样式集中改变：div。style。csstext = “width：20px height：10px”
+ //4.缓存布局信息 div。style。left = div。offsetleft + 1 + px改为var curleft = div。offsetleft  div。style。left = div。curleft + 1 + px改
+ //5.元素批量修改：模板字符串拼接
+ //6.动画效果应用到position属性为absolute或fixed的元素上（脱离文档流）
+ //7.css3硬件加速（gpu加速）
+ //8.避免table布局和使用css的javascript表达式  
+
+</script>
+
+
+<script>
+//一【mdn 事件参考】=》需要背诵
+// 1.什么是事件？：浏览器赋予元素天生默认的一些行为，无论是否绑定相关的方法，只要行为操作进行了，那么一定会触发相关的事件行为
+//2.什么是事件绑定？ ：给元素的某一个事件行为绑定方法，目的是行为触发会可以做点自己想做的事情
+//3.事件绑定 dom0事件绑定/dom2事件绑定
+   //【dom0事件绑定】
+ // （元素.click=function（）{}  清除：元素。onxxx=null）       原理：给dom元素的某一个私有事件属性赋予函数值，当用户触发这个事件行为，js引擎会帮助我们把之前绑定的方法执行的=》1.不是所有的事件类型都支持这中方式，元素有哪些onxxx事件属性，才能给其绑定方法（例如：DOMContenLoaded事件就不支持这种绑定方案）   =》2.只能给当前元素的某一个事件行为绑定一个方法（绑定最多也只能识别最后一个）
+
+    //【dom2事件绑定】
+ //元素。addEventListener（【事件类型】，【方法】，【传播模式】）    
+ //元素。removeEventListener（【事件类型】，【方法】，【传播模式】） 
+ //function anonymous （）{console。log（ev）}
+ //box。addEventListener（“click”，“anonymous，“false””）；原理：基于原型链查找机制，找到eventtaget。prototype上的addeventlistener方法执行
+</script>
+
+<script>
+//1.给元素的事件行为绑定方法，当事件行为触发方法会被执行，不仅被执行，而且还会把之前操作的相关信息传递给这个函数==》“事件对象”
+//2.如果是鼠标操作，获取的是mouseevent类的实例==》鼠标事件对象
+//3.鼠标事件对象=》mouseevent。prototype==》UIEvent。prototype=》Event。prototype=》object。prototype
+//4.如果是键盘操作，获取的是keyboardEvent类的实例=》键盘事件对象
+//5.除了以上还有：普通事件对象（event），手指事件对象（touchevent）
+
+
+//二 box>onclick = function（ec）{
+//1.鼠标事件对象  2.clientx和clienty：当前鼠标触发距离当前窗口左上角的x/y轴坐标  3.pagex/pagey：触发点距离当前页面左上角的x/y轴坐标 4.type：触发事件的类型  5.target：事件源（操作的是哪个元素，哪个元素就是事件源），在不兼容的跨浏览器中可以使用srcelement获取，也代表的是事件源 6.preventDefault（）：用来组织默认行为的方法，不兼容的浏览器中用ev.returnValue=false也可以组织默认行为 7.stopPropagation（）：阻止冒泡传播，不兼容的浏览器中用ev.cancelBubble = true也可以阻止默认行为
+//console，log（x，y） 
+ 
+// }
+
+//三 事件对象和函数以及给谁绑定的事件没啥必然关系，他储存的是当前本次操作的相关信息，操作一次只能有一份信息，所以在哪个方法中获取的信息都会是一样的：第二次操作，存储的信息会把上一次操作存储的信息覆盖掉。。。
+//每一次事件触发，浏览器都会这样处理下
+//1.捕获到当前操作的行为（把操作信息获取到），铜鼓哟创建mouseevent等类的实例，得到事件对象ev
+//2.通知所有绑定的方法（符合执行条件的）开始执行，并且把ev当作实参传递给每个方法，所以在每个方法中得到的事件对象其实是一个
+//3。后面在重新出发这个时间行为，会重新获取本次操作的信息，用新的信息替换老的信息，然后再继续之前的步骤
+</script>
+
+
+
+<script>
+// 1.A标签的默认行为：页面跳转  2.A标签的默认行为：锚点定位
+//2.阻止它的默认行为 1.href=“javascript” 2.点击a标签：先触发click，然后再去执行href的跳转
+//link.onClick = function(ev){返回一个false，相当于结束后面即将执行的步骤}return false；}
+//link.onclick = function(ev){ev.preventDefalut()};
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<style>
+.context{
+   position: fixed;
+   top:0;
+   left: 0;
+   box-sizing: border-box;
+   padding: p 5px;
+   width: 100px;
+   border: 1px solid lightcoral;
+}
+.context li {
+    line-height: 35px;
+    border-bottom: 1px dashed #eee;
+
+}
+
+.context li:nth-last-child(1){
+    border-bottom: none;
+}
+
+
+
+
+
+
+
+</style>
+
+<ul class="context">
+    <li>大哥哥</li>
+    <li>小姐姐</li>
+</ul>
+
+
+<script>
+  let context = document.querySelector(".context");
+  window.addEventListener("contextmenu",function(ev){ev.preventDefault()
+   context.style.display = "block"
+   context.style.top = ev.clientY+"px";
+   context.style.left =  ev.clientX+"px";
+  
+  }
+  
+  
+  
+  
+  )
+ </script>
+
+
+<input type="text"  id="cardInp">
+<script>
+//=>键盘事件对象  code&key：存储的都是按键，code更细致   keycode&which 存储的都是按键对应的代码值 
+// 方向键  37 38 39 40 =》左上右下
+//空格32
+
+
+cardInp.onKeyup = cardInp.onKeydown = function(ev){
+    console.log(ev.keyCode)
+}
+cardInp.onKeyup = cardInp.onKeydown = function(ev){
+    let val = this.value;
+    reg = /[^0-9x]/g;
+    this.value = val.replace(reg,"");
+    if(this.value.length>=18){
+        let arr = [8,13,37,38,39,40,46];
+        if(!arr.includes(ev.keyCode)){
+            ev.preventDefault();
+        }
+    }
+    if(ev.keyCode === 13){
+        alert(this.value)
+    }
+}
+
+
+</script>
+
+
+
+
+
+<script>
+//事件的传播机制 1.捕获阶段：从最外层向最里层事件源依次进行查找（目的：是为冒泡阶段事先计算好传播的层级路径） =》CAPTUREING PHASE:1  2：目标阶段：当前元素的相关事件行为触发 =》AT_TARGET :2   3:冒泡阶段：触发当前元素的某一个事件行为，不仅它的这个行为被触发了，而且它所有的祖先元素（一直到window）相关的事件行为都会被依次触发（从内到外的顺序）=》BUBBLING_PHASE:3
+
+//二 DOM0 绑定的方法，只能在目标阶段和冒泡阶段触发时执行  DOM2绑定的方法，我们可以控制在捕获阶段执行
+// outer。addEventListener（“click”，function（）{//=>false代表在冒泡阶段执行此方法 //=true代表在捕获阶段执行此方法}，false）
+
+
+//三  1.mouseover本身不是进入，而是看鼠标再谁上面，从子元素进入父元素，触发父元素的mouseover，从父元素进入子元素触发父元素的mouseout   2.mouseenter默认阻止了时间的冒泡传播，从大容器进入小盒子，从小盒子重新进入到大容器，大容器的enter和leave都不会触发（因为它认为你还在我的容器中，不存在离开和从重新进入）
+
+//四  mouseover VS mouseenter
+// 1.盒子中有后代元素的，我们尽可能用mouseener 2.需要基于冒泡传播干什么事情，我们只能用mouseover 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>
